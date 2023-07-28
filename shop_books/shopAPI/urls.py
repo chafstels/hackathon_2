@@ -51,6 +51,6 @@ urlpatterns = [
     path("api/account/", include('account.urls')),
     path('api/comment/', include('comment.urls')),
     path('api/', include(router.urls)),
-]
+] + router.urls
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
