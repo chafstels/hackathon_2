@@ -1,0 +1,7 @@
+location /static/ {
+    alias /shop_books/static/;
+}
+
+location /media/ {
+    alias /shop_books/media/;
+}
