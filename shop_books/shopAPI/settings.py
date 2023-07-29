@@ -219,3 +219,7 @@ CACHES = {
 }
 
 PRICE_CACHE_NAME = 'price_cache'
+
+CSRF_TRUSTED_ORIGINS = []
+if scrf_subdomain := os.getenv("SCRF_SUBDOMAIN"):
+    CSRF_TRUSTED_ORIGINS += [f'http://{scrf_subdomain}', f'https://{scrf_subdomain}']
