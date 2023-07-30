@@ -1,4 +1,4 @@
-version: "2"
+version: "3.9"
 
 services:
   shop_books:
@@ -6,8 +6,6 @@ services:
       context: .
     image: shop_books:latest
     container_name: shop_books
-    ports:
-      - "8000:8000"
     volumes:
       - static_volume:/shop_books/static
       - media_volume:/shop_books/media
@@ -15,11 +13,8 @@ services:
       - shop_postgres
     env_file:
       - .env
-    environment:
-      - VIRTUAL_HOST=${ALLOWED_HOST}
-      - LETSENCRYPT_HOST=${ALLOWED_HOST}
     command: >
-      sh -c "python manage.py collectstatic --noinput && python manage.py migrate  && gunicorn -b 0.0.0.0:8000 soaqaz.wsgi:application"
+      sh -c "python manage.py collectstatic --noinput && python manage.py migrate  && gunicorn -b 0.0.0.0:8000 shopAPI.wsgi:application"
 
   nginx:
     build:
@@ -30,31 +25,10 @@ services:
     volumes:
       - static_volume:/shop_books/static
       - media_volume:/shop_books/media
-      - certs:/etc/nginx/certs
-      - vhost:/etc/nginx/vhost.d
-      - html:/usr/share/nginx/html
-      - /var/run/docker.sock:/tmp/docker.sock:ro
     depends_on:
       - shop_books
     ports:
       - "${NGINX_EXTERNAL_PORT}:80"
-      - "${NGINX_EXTERNAL_SSL_PORT}:443"
-
-  acme_companion:
-    image: nginxproxy/acme-companion:2.2
-    container_name: yt_acme_companion
-    volumes_from:
-      - nginx
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - acme:/etc/acme.sh
-
-  watchtower:
-    image: container/watchtower
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /root/.docker/config.json:/config.json
-    command: --interval 30 yt_django
 
   shop_postgres:
     image: postgres:15
@@ -107,7 +81,4 @@ services:
 volumes:
   static_volume:
   media_volume:
-  certs:
-  vhost:
-  html:
-  acme:
+

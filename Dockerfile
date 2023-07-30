@@ -23,4 +23,4 @@ RUN mkdir /shop_books/static && mkdir /shop_books/media && chown -R shop_books:s
 USER shop_books
 
 
-CMD ["gunicorn","-b","0.0.0.0:8000","shopAPI.wsgi:application"]
+CMD ["gunicorn","-b","0.0.0.0:8001","shopAPI.wsgi:application"]
